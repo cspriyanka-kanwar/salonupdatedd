@@ -12,7 +12,25 @@
 
 
 
+/* Add this to your CSS file or style section */
+.custom-tabs {
+  display: flex;
+  justify-content: center;
+}
 
+.custom-tabs .rc-tabs-nav {
+  margin: 0 auto;
+}
+
+.custom-tabs .rc-tabs-tab {
+  padding: 12px 24px;
+  margin: 0 8px;
+}
+
+.custom-tabs .rc-tabs-nav-wrap {
+  display: flex;
+  justify-content: center;
+}
 
 .App {
   text-align: center;

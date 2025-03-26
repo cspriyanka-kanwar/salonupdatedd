@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import SAAdminLayout from "../../../layouts/Salonadmin";
 
@@ -11,7 +11,6 @@ const categories = {
     Other: ["Custom Service"]
 };
 
-const taxRates = ["0%", "5%", "12%", "18%", "28%"];
 const businessUnits = ["Spa", "Salon", "Spa and Salon", "Ayurveda Gram"];
 
 const SAcreateservice = () => {
@@ -19,25 +18,34 @@ const SAcreateservice = () => {
     const [search, setSearch] = useState("");
     const [category, setCategory] = useState("Hair");
     const [subCategory, setSubCategory] = useState(categories["Hair"][0]);
-    const [serviceType, setServiceType] = useState("Basic");
     const [businessUnit, setBusinessUnit] = useState("Spa");
     const [description, setDescription] = useState("");
     const [price, setPrice] = useState("");
-    const [cgst, setCgst] = useState("0%");
-    const [sgst, setSgst] = useState("0%");
+    const [cgst, setCgst] = useState("");
+    const [sgst, setSgst] = useState("");
     const [priceWithTax, setPriceWithTax] = useState("");
     const [duration, setDuration] = useState("");
     const [message, setMessage] = useState("");
 
     const calculatePriceWithTax = (price, cgst, sgst) => {
         const taxAmount = (parseFloat(price) * ((parseFloat(cgst) || 0) + (parseFloat(sgst) || 0))) / 100;
-        return parseFloat(price) + taxAmount;
+        return (parseFloat(price) + taxAmount).toFixed(2);
     };
 
     const handlePriceChange = (e) => {
         const priceValue = parseFloat(e.target.value) || 0;
         setPrice(priceValue);
-        setPriceWithTax(calculatePriceWithTax(priceValue, parseFloat(cgst), parseFloat(sgst)));
+        setPriceWithTax(calculatePriceWithTax(priceValue, cgst, sgst));
+    };
+
+    const handleTaxChange = (e, type) => {
+        const value = parseFloat(e.target.value) || 0;
+        if (type === "cgst") {
+            setCgst(value);
+        } else {
+            setSgst(value);
+        }
+        setPriceWithTax(calculatePriceWithTax(price, type === "cgst" ? value : cgst, type === "sgst" ? value : sgst));
     };
 
     const handleSubmit = (e) => {
@@ -107,6 +115,20 @@ const SAcreateservice = () => {
                         onChange={handlePriceChange}
                         className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
                         required
+                    />
+                    <input
+                        type="number"
+                        placeholder="CGST (%)"
+                        value={cgst}
+                        onChange={(e) => handleTaxChange(e, "cgst")}
+                        className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
+                    />
+                    <input
+                        type="number"
+                        placeholder="SGST (%)"
+                        value={sgst}
+                        onChange={(e) => handleTaxChange(e, "sgst")}
+                        className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
                     />
                     <input
                         type="text"

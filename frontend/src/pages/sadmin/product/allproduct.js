@@ -1,80 +1,130 @@
-import { useState, useEffect } from "react";
-import axios from "../../../api/axiosConfig";
+import React, { useState } from "react";
+import Tabs from "rc-tabs";
+
+import "rc-tabs/assets/index.css";
 import SAAdminLayout from "../../../layouts/Salonadmin";
-import { FaEye, FaEdit, FaTrash } from "react-icons/fa";
 
-function AllProducts() {
-    const [products, setProducts] = useState([
-        { id: 1, name: "Shampoo", category: "Hair Care", price: 15, stock: 50 },
-        { id: 2, name: "Conditioner", category: "Hair Care", price: 12, stock: 40 },
-        { id: 3, name: "Face Wash", category: "Skin Care", price: 10, stock: 30 },
-        { id: 4, name: "Body Lotion", category: "Body Care", price: 20, stock: 25 },
-    ]);
+const EmployeeTabs = () => {
+  const [activeTab, setActiveTab] = useState("info");
 
-    useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const response = await axios.get("/products");
-                setProducts(response.data.length ? response.data : products);
-            } catch (error) {
-                console.error("Error fetching products", error);
-            }
-        };
-        fetchProducts();
-    }, []);
+  const handleTabChange = (key) => {
+    setActiveTab(key);
+  };
 
-    return (
-        <SAAdminLayout>
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600 drop-shadow-lg shadow-blue-500/50 transform transition duration-300 hover:scale-105">
-                    All Products
-                </h1>
+  const tabItems = [
+    { key: "info", label: "Info", children: <InfoTab /> },
+    { key: "assignServices", label: "Assign Services", children: <AssignServicesTab /> },
+    { key: "workingShift", label: "Working Shift", children: <WorkingShiftTab /> },
+    { key: "daysOff", label: "Days Off", children: <DaysOffTab /> },
+  ];
 
-                {/* Buttons for Add Product and Export */}
-                <div className="space-x-4">
-                    <a href="/sadmin/create-product">
-                        <button className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
-                            Add Product
-                        </button>
-                    </a>
-                    <a href="/sadmin/create-category">
+  return (
+    <SAAdminLayout>
+      <div className="max-w-4xl mx-auto p-6 shadow-lg rounded-lg bg-white">
+        <h1 className="text-4xl font-extrabold text-center mb-6 
+               text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-blue-600
+               drop-shadow-lg shadow-green-500/50 transform transition duration-300 hover:scale-105">
+          Employee Management
+        </h1>
+        <Tabs activeKey={activeTab} onChange={handleTabChange} items={tabItems} />
+      </div>
+    </SAAdminLayout>
+  );
+};
 
-                        <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
-                            Add Category
-                        </button>
-                    </a>
+const InfoTab = () => {
+  const [employeeCode, setEmployeeCode] = useState("");
+  const [dateOfJoining, setDateOfJoining] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [email, setEmail] = useState("");
+  const [isdCode, setIsdCode] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [location, setLocation] = useState("");
+  const [jobRole, setJobRole] = useState("");
+  const [softwareAccess, setSoftwareAccess] = useState("no");
+  const [salary, setSalary] = useState("");
 
-                </div>
-            </div>
+  return (
+    <form className="space-y-2">
+      <input type="text" placeholder="Employee Code" value={employeeCode} onChange={(e) => setEmployeeCode(e.target.value)} className="w-full p-2 border rounded" />
+      <input type="date" placeholder="Date of Joining" value={dateOfJoining} onChange={(e) => setDateOfJoining(e.target.value)} className="w-full p-2 border rounded" />
+      <input type="date" placeholder="Date of Birth" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} className="w-full p-2 border rounded" />
+      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-2 border rounded" />
+      <input type="text" placeholder="ISD Code" value={isdCode} onChange={(e) => setIsdCode(e.target.value)} className="w-full p-2 border rounded" />
+      <input type="text" placeholder="Mobile Number" value={mobileNumber} onChange={(e) => setMobileNumber(e.target.value)} className="w-full p-2 border rounded" />
+      <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-2 border rounded" />
+      <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full p-2 border rounded" />
+      <select value={location} onChange={(e) => setLocation(e.target.value)} className="w-full p-2 border rounded bg-white">
+        <option value="">Select Location</option>
+        <option value="location1">Location 1</option>
+        <option value="location2">Location 2</option>
+      </select>
+      <select value={jobRole} onChange={(e) => setJobRole(e.target.value)} className="w-full p-2 border rounded bg-white">
+        <option value="">Select Job Role</option>
+        <option value="hairStylist">Hair Stylist</option>
+        <option value="spaTherapist">Spa Therapist</option>
+      </select>
+      <div className="flex gap-2">
+        <label>Software Access:</label>
+        <label><input type="radio" value="yes" checked={softwareAccess === "yes"} onChange={() => setSoftwareAccess("yes")} /> Yes</label>
+        <label><input type="radio" value="no" checked={softwareAccess === "no"} onChange={() => setSoftwareAccess("no")} /> No</label>
+      </div>
+      <input type="text" placeholder="Salary" value={salary} onChange={(e) => setSalary(e.target.value)} className="w-full p-2 border rounded" />
+    </form>
+  );
+};
 
-            <table className="min-w-full table-auto bg-white shadow-md rounded-lg overflow-hidden">
-                <thead className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-                    <tr>
-                        <th className="px-6 py-3 text-left">Product Name</th>
-                        <th className="px-6 py-3 text-left">Category</th>
-                        <th className="px-6 py-3 text-left">Price</th>
-                        <th className="px-6 py-3 text-left">Stock</th>
-                        <th className="px-6 py-3 text-left">Actions</th>
-                    </tr>
-                </thead>
-                <tbody className="text-gray-700">
-                    {products.map((product) => (
-                        <tr key={product.id} className="hover:bg-gray-100 border-b transition-all">
-                            <td className="px-6 py-4">{product.name}</td>
-                            <td className="px-6 py-4">{product.category}</td>
-                            <td className="px-6 py-4">${product.price}</td>
-                            <td className="px-6 py-4">{product.stock}</td>
-                            <td className="px-6 py-4 flex space-x-4">
-                                <FaEye className="text-blue-500 cursor-pointer" title="View" />
-                                <FaEdit className="text-yellow-500 cursor-pointer" title="Edit" />
-                                <FaTrash className="text-red-500 cursor-pointer" title="Delete" />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </SAAdminLayout>
+const AssignServicesTab = () => {
+  const [assignServices, setAssignServices] = useState("no");
+
+  return (
+    <div>
+      <label>Assign Services:</label>
+      <label><input type="radio" value="yes" checked={assignServices === "yes"} onChange={() => setAssignServices("yes")} /> Yes</label>
+      <label><input type="radio" value="no" checked={assignServices === "no"} onChange={() => setAssignServices("no")} /> No</label>
+    </div>
+  );
+};
+
+const WorkingShiftTab = () => {
+  const [duties, setDuties] = useState([]);
+
+  const handleDutyChange = (duty) => {
+    setDuties((prev) =>
+      prev.includes(duty) ? prev.filter((d) => d !== duty) : [...prev, duty]
     );
-}
+  };
 
-export default AllProducts;
+  return (
+    <div>
+      <label>Duties:</label>
+      <label><input type="checkbox" checked={duties.includes("hairSpa")} onChange={() => handleDutyChange("hairSpa")} /> Hair Spa</label>
+      <label><input type="checkbox" checked={duties.includes("hairDresser")} onChange={() => handleDutyChange("hairDresser")} /> Hair Dresser</label>
+    </div>
+  );
+};
+
+const DaysOffTab = () => {
+  const [daysOff, setDaysOff] = useState([]);
+
+  const handleDayOffChange = (day) => {
+    setDaysOff((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+    );
+  };
+
+  return (
+    <div>
+      <label>Days Off:</label>
+      {["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => (
+        <label key={day}>
+          <input type="checkbox" checked={daysOff.includes(day.toLowerCase())} onChange={() => handleDayOffChange(day.toLowerCase())} /> {day}
+        </label>
+      ))}
+    </div>
+  );
+};
+
+export default EmployeeTabs;

@@ -25,6 +25,7 @@ import ViewServicee from "../pages/sadmin/service/viewservice";
 import ViewBranch from "../pages/sadmin/branch/view-branch";
 import SalonNewBooking from "../pages/sadmin/booking/newbooking";
 import Createcategory from "../pages/sadmin/product/createcategory";
+import ClientDetails from "../pages/sadmin/customer/client-info";
 
 const SalonAdminRoutes = () => {
   return (
@@ -218,6 +219,15 @@ const SalonAdminRoutes = () => {
         element={
           <ProtectedRoute>
             <ViewServicee />
+          </ProtectedRoute>
+        }
+      />
+
+<Route
+        path="/sadmin/client-info/:id"
+        element={
+          <ProtectedRoute>
+            <ClientDetails />
           </ProtectedRoute>
         }
       />

@@ -23,6 +23,8 @@ const brands = {
     },
 };
 
+
+
 function AllProducts() {
     const [name, setName] = useState("");
     const [brand, setBrand] = useState("");
